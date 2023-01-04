@@ -16,7 +16,7 @@ public class BrickOrderController {
     }
 
     @PutMapping("/createOrder")
-    public String createOrder(@RequestParam final int numberOfBricks) throws IllegalArgumentException{
+    public String createOrder(@RequestParam final int numberOfBricks) {
         return this.orderService.createOrder(numberOfBricks);
     }
 

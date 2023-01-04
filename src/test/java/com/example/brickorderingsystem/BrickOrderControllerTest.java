@@ -6,14 +6,10 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
 
 /**
- * Normally I would have mocked the order service here and make this a unit test.
+ * Normally I would have mocked the order service here and made this a unit test.
  * However, since I'm pressed for time I decided to write integration tests instead.
  */
 class BrickOrderControllerTest {
-//    @Mock
-//    BrickOrderService orderService;
-    
-//    @InjectMocks
     BrickOrderController orderController;
 
     @BeforeEach
@@ -23,10 +19,9 @@ class BrickOrderControllerTest {
 
     @Test
     void createOrder_withZeroBricks_throwsException() {
-//        when(this.orderService.createOrder(0)).thenThrow(new OrderException());
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> this.orderController.createOrder(0))
-                .withMessage("Illegal argument: 0 or null order");
+                .withMessage(OrderException.ILLEGAL_ARG_ZERO_OR_NULL);
     }
 
     @Test
@@ -47,7 +42,7 @@ class BrickOrderControllerTest {
     void getOrder_withWrongReference_throwsException() {
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> this.orderController.getOrder(null))
-                .withMessage("Illegal argument: empty or null reference");
+                .withMessage(OrderException.ILLEGAL_ARG_NO_SUCH_REFERENCE);
     }
     
     @Test
@@ -68,10 +63,9 @@ class BrickOrderControllerTest {
     
     @Test
     void getOrders_withNoExistingOrders_throwsException() {
-        assertThatThrownBy(() -> this.orderController.getOrder(""))
+        assertThatThrownBy(() -> this.orderController.getOrders())
                 .isInstanceOf(OrderException.class)
-                .hasMessage("No orders created yet.");
-
+                .hasMessage(OrderException.NO_EXISTING_ORDERS);
     }
 
     @Test
