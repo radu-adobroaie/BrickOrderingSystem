@@ -37,8 +37,8 @@ class BrickOrderControllerTest {
     
     @Test
     void createOrder_withSameNumberOfBricks_returnsDifferentReference() {
-        final String firstReference = this.orderController.createOrder(3);
-        final String secondReference = this.orderController.createOrder(3);
+        final String firstReference = this.orderController.createOrder(1);
+        final String secondReference = this.orderController.createOrder(2);
 
         assertThat(firstReference).isNotEqualTo(secondReference);
     }
@@ -76,9 +76,10 @@ class BrickOrderControllerTest {
 
     @Test
     void getOrders_withExistingOrders_returnsOrders() {
-        final String firstReference = this.orderController.createOrder(3);
-        final String secondReference = this.orderController.createOrder(3);
+        final String firstReference = this.orderController.createOrder(1);
+        final String secondReference = this.orderController.createOrder(2);
 
-        assertThat(this.orderController.getOrders()).contains(firstReference, secondReference);
+        assertThat(this.orderController.getOrders().stream().map(Order::getId))
+                .contains(firstReference, secondReference);
     }
 }

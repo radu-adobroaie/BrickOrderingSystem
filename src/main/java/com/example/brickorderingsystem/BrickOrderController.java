@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class BrickOrderController {
     private final BrickOrderService orderService;
@@ -14,19 +16,17 @@ public class BrickOrderController {
     }
 
     @PutMapping("/createOrder")
-    public String createOrder(@RequestParam final int numberOfBricks) {
+    public String createOrder(@RequestParam final int numberOfBricks) throws IllegalArgumentException{
         return this.orderService.createOrder(numberOfBricks);
     }
 
     @GetMapping("/getOrder")
-    public String getOrder(@RequestParam final String reference) {
-//        return this.orderService.get(numberOfBricks);
-        return "";
+    public Order getOrder(@RequestParam final String reference) {
+        return this.orderService.getOrder(reference);
     }
 
     @GetMapping("/getOrders")
-    public String getOrders(@RequestParam final String reference) {
-//        return this.orderService.get(numberOfBricks);
-        return "";
+    public List<Order> getOrders() {
+        return this.orderService.getOrders();
     }
 }

@@ -1,5 +1,5 @@
 package com.example.brickorderingsystem;
 
-public class OrderException {
+public class OrderException extends RuntimeException {
 
 }
