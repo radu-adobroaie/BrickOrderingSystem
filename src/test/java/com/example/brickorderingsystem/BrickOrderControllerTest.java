@@ -5,6 +5,8 @@ import entities.Order;
 import errorHandling.OrderException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import services.BrickOrderService;
 
 import static org.assertj.core.api.Assertions.*;
@@ -157,9 +159,10 @@ class BrickOrderControllerTest {
     void fulfilOrder_withCorrectReference_DispatchesOrder() {
         final String reference = this.orderController.createOrder(3);
 
-        this.orderController.fulfilOrder(reference);
         final Order order = this.orderController.getOrder(reference);
+        final ResponseEntity<?> response = this.orderController.fulfilOrder(reference);
 
         assertTrue(order.isDispatched());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
     }
 }
