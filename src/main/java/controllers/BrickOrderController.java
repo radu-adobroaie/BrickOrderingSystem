@@ -1,8 +1,10 @@
 package controllers;
 
-import services.BrickOrderService;
 import entities.Order;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import services.BrickOrderService;
 
 import java.util.List;
 
@@ -36,8 +38,18 @@ public class BrickOrderController {
     public List<Order> getOrders() {
         return this.orderService.getOrders();
     }
+
     @PutMapping("/updateOrder")
     public String updateOrder(@RequestParam final String reference, @RequestParam final int numberOfBricks) {
         return this.orderService.updateOrder(reference, numberOfBricks);
+    }
+
+    @PostMapping("/fulfilOrder")
+    public ResponseEntity<?> fulfilOrder(@RequestParam final String reference) {
+        this.orderService.fulfilOrder(reference);
+
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .build();
     }
 }

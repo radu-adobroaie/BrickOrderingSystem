@@ -2,12 +2,13 @@ package com.example.brickorderingsystem;
 
 import controllers.BrickOrderController;
 import entities.Order;
-import exceptions.OrderException;
+import errorHandling.OrderException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import services.BrickOrderService;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Normally I would have mocked the order service here and made this a unit test.
@@ -84,7 +85,6 @@ class BrickOrderControllerTest {
 
     @Test
     void updateOrders_withNoExistingOrders_throwsException() {
-        // TODO: Do we really want the system to break for no references?
         assertThatThrownBy(() -> this.orderController.updateOrder("reference", 1))
                 .isInstanceOf(OrderException.class)
                 .hasMessage(OrderException.NO_EXISTING_ORDERS);
@@ -123,5 +123,43 @@ class BrickOrderControllerTest {
         final String response = this.orderController.updateOrder(reference, 2);
 
         assertThat(response).isEqualTo(reference);
+    }
+
+    @Test
+    void fulfilOrder_withWrongReference_throwsException() {
+        this.orderController.createOrder(2);
+
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> this.orderController.fulfilOrder(""))
+                .withMessage(OrderException.ILLEGAL_ARG_NO_SUCH_REFERENCE);
+    }
+
+    @Test
+    void fulfilOrder_withNullReference_throwsException() {
+        this.orderController.createOrder(2);
+
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> this.orderController.fulfilOrder(null))
+                .withMessage(OrderException.ILLEGAL_ARG_NO_SUCH_REFERENCE);
+    }
+
+    @Test
+    void fulfilOrder_withDispatchedOrder_throwsException() {
+        final String reference = this.orderController.createOrder(3);
+        this.orderController.fulfilOrder(reference);
+
+        assertThatThrownBy(() -> this.orderController.fulfilOrder(reference))
+                .isInstanceOf(OrderException.class)
+                .hasMessage(OrderException.ALREADY_DISPATCHED);
+    }
+
+    @Test
+    void fulfilOrder_withCorrectReference_DispatchesOrder() {
+        final String reference = this.orderController.createOrder(3);
+
+        this.orderController.fulfilOrder(reference);
+        final Order order = this.orderController.getOrder(reference);
+
+        assertTrue(order.isDispatched());
     }
 }

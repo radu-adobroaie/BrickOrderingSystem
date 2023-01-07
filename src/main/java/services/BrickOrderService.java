@@ -1,6 +1,6 @@
 package services;
 
-import exceptions.OrderException;
+import errorHandling.OrderException;
 import entities.Order;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +63,18 @@ public class BrickOrderService {
             throw new IllegalArgumentException(OrderException.ILLEGAL_ARG_ZERO_OR_NULL);
         }
 
-        this.ordersByReference.put(reference, new Order(reference, numberOfBricks));
+        this.ordersByReference.get(reference).updateNumberOfBricks(numberOfBricks);
+
         return reference;
+    }
+
+    public void fulfilOrder(final String reference) {
+        final Order order = this.getOrder(reference);
+
+        if (order.isDispatched()) {
+            throw new OrderException(OrderException.ALREADY_DISPATCHED);
+        }
+
+        order.dispatch();
     }
 }
