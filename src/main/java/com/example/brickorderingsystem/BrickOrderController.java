@@ -1,9 +1,6 @@
 package com.example.brickorderingsystem;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,7 +12,13 @@ public class BrickOrderController {
         this.orderService = orderService;
     }
 
-    @PutMapping("/createOrder")
+    /**
+     * Creates an order for a given number of bricks.
+     *
+     * @param numberOfBricks number of bricks to order
+     * @return a reference to the order created
+     */
+    @PostMapping("/createOrder") // post instead of put due to idempotency
     public String createOrder(@RequestParam final int numberOfBricks) {
         return this.orderService.createOrder(numberOfBricks);
     }
