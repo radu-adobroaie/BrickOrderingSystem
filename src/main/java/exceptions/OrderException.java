@@ -1,4 +1,4 @@
-package com.example.brickorderingsystem;
+package exceptions;
 
 public class OrderException extends RuntimeException {
 
