@@ -1,4 +1,4 @@
-package com.example.brickorderingsystem;
+package entities;
 
 import java.util.UUID;
 
@@ -12,8 +12,8 @@ public class Order {
 
     }
 
-    private Order(final String id, final int numberOfBricks) {
-        this.id = UUID.randomUUID().toString();
+    public Order(final String id, final int numberOfBricks) {
+        this.id = id;
         this.numberOfBricks = numberOfBricks;
 
     }

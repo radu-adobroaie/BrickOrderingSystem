@@ -1,7 +1,11 @@
 package com.example.brickorderingsystem;
 
+import controllers.BrickOrderController;
+import entities.Order;
+import exceptions.OrderException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import services.BrickOrderService;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -49,7 +53,7 @@ class BrickOrderControllerTest {
     void getOrder_withNullReference_throwsException() {
         assertThatIllegalArgumentException()
                 .isThrownBy(() -> this.orderController.getOrder(""))
-                .withMessage("Illegal argument: empty or null reference");
+                .withMessage(OrderException.ILLEGAL_ARG_NO_SUCH_REFERENCE);
     }
     
     @Test
@@ -63,6 +67,7 @@ class BrickOrderControllerTest {
     
     @Test
     void getOrders_withNoExistingOrders_throwsException() {
+        // TODO: Do we really want the system to break for no references?
         assertThatThrownBy(() -> this.orderController.getOrders())
                 .isInstanceOf(OrderException.class)
                 .hasMessage(OrderException.NO_EXISTING_ORDERS);
@@ -75,5 +80,48 @@ class BrickOrderControllerTest {
 
         assertThat(this.orderController.getOrders().stream().map(Order::getId))
                 .contains(firstReference, secondReference);
+    }
+
+    @Test
+    void updateOrders_withNoExistingOrders_throwsException() {
+        // TODO: Do we really want the system to break for no references?
+        assertThatThrownBy(() -> this.orderController.updateOrder("reference", 1))
+                .isInstanceOf(OrderException.class)
+                .hasMessage(OrderException.NO_EXISTING_ORDERS);
+    }
+
+    @Test
+    void updateOrder_withZeroBricks_throwsException() {
+        final String reference = this.orderController.createOrder(1);
+
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> this.orderController.updateOrder(reference, 0))
+                .withMessage(OrderException.ILLEGAL_ARG_ZERO_OR_NULL);
+    }
+
+    @Test
+    void updateOrder_withWrongReference_throwsException() {
+        this.orderController.createOrder(2);
+
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> this.orderController.updateOrder("", 1))
+                .withMessage(OrderException.ILLEGAL_ARG_NO_SUCH_REFERENCE);
+    }
+
+    @Test
+    void updateOrder_withNullReference_throwsException() {
+        this.orderController.createOrder(2);
+
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> this.orderController.updateOrder(null, 1))
+                .withMessage(OrderException.ILLEGAL_ARG_NO_SUCH_REFERENCE);
+    }
+
+    @Test
+    void updateOrder_withCorrectReferenceAndOrder_returnsReference() {
+        final String reference = this.orderController.createOrder(3);
+        final String response = this.orderController.updateOrder(reference, 2);
+
+        assertThat(response).isEqualTo(reference);
     }
 }

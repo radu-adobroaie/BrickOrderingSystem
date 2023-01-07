@@ -1,5 +1,7 @@
-package com.example.brickorderingsystem;
+package controllers;
 
+import services.BrickOrderService;
+import entities.Order;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +13,8 @@ public class BrickOrderController {
     public BrickOrderController(final BrickOrderService orderService) {
         this.orderService = orderService;
     }
+
+    // TODO: Update controller to return http response and add advice for error handling
 
     /**
      * Creates an order for a given number of bricks.
@@ -31,5 +35,9 @@ public class BrickOrderController {
     @GetMapping("/getOrders")
     public List<Order> getOrders() {
         return this.orderService.getOrders();
+    }
+    @PutMapping("/updateOrder")
+    public String updateOrder(@RequestParam final String reference, @RequestParam final int numberOfBricks) {
+        return this.orderService.updateOrder(reference, numberOfBricks);
     }
 }
