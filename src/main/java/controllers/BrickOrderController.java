@@ -47,7 +47,6 @@ public class BrickOrderController {
     @PostMapping("/fulfilOrder")
     public ResponseEntity<?> fulfilOrder(@RequestParam final String reference) {
         this.orderService.fulfilOrder(reference);
-
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .build();
